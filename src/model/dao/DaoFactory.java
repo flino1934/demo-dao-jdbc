@@ -7,7 +7,7 @@ public class DaoFactory {
 	
 	public static SellerDao createSellerDao() {//vai expor a interface ao inves de expor a implementação 
 		
-		return new SellerDaoJDBC(DB.getConnection());
+		return new SellerDaoJDBC(DB.getConnection());//Ele vai te retornar a classe SellerDaoJDBC
 		
 	}
 

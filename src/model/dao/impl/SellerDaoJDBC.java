@@ -62,18 +62,10 @@ public class SellerDaoJDBC implements SellerDao{
 			if (rs.next()) {
 				
 				//Foi criado um Department para passar os dados 
-				Department department = new Department();
-				department.setId(rs.getInt("DepartmentId"));//vai passar o ID que esta no banco para a classe!
-				department.setName(rs.getString("DepName"));//vai passar o nome do departamento para a classe!
+				Department department = instantiateDepartment(rs);
 				
 				//Foi criado um Seller para passar os dados para a classe!
-				Seller obj = new Seller();
-				obj.setId(rs.getInt("Id"));
-				obj.setName(rs.getString("Name"));
-				obj.setEmail(rs.getString("Email"));
-				obj.setBaseSalary(rs.getDouble("BaseSalary"));
-				obj.setBirthDate(rs.getDate("BirthDate"));
-				obj.setDepartment(department);
+				Seller obj = instatiateSeller(rs,department);
 				
 				return obj;
 				
@@ -91,7 +83,30 @@ public class SellerDaoJDBC implements SellerDao{
 			DB.closeResultSet(rs);
 			
 		}
+
+	}
+
+	private Seller instatiateSeller(ResultSet rs, Department department) throws SQLException {
+		// TODO Auto-generated method stub
+
+		Seller obj = new Seller();
+		obj.setId(rs.getInt("Id"));
+		obj.setName(rs.getString("Name"));
+		obj.setEmail(rs.getString("Email"));
+		obj.setBaseSalary(rs.getDouble("BaseSalary"));
+		obj.setBirthDate(rs.getDate("BirthDate"));
+		obj.setDepartment(department);
+
+		return obj;
+	}
+
+	private Department instantiateDepartment(ResultSet rs) throws SQLException {//Metodo de intanciação do Department
+		// TODO Auto-generated method stub
 		
+		Department department = new Department();
+		department.setId(rs.getInt("DepartmentId"));//vai passar o ID que esta no banco para a classe!
+		department.setName(rs.getString("DepName"));//vai passar o nome do departamento para a classe!
+		return department;
 	}
 
 	@Override
