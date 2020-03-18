@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import db.DB;
 import db.DbException;
@@ -62,10 +65,10 @@ public class SellerDaoJDBC implements SellerDao{
 			if (rs.next()) {
 				
 				//Foi criado um Department para passar os dados 
-				Department department = instantiateDepartment(rs);
+				Department dep = instantiateDepartment(rs);
 				
 				//Foi criado um Seller para passar os dados para a classe!
-				Seller obj = instatiateSeller(rs,department);
+				Seller obj = instatiateSeller(rs,dep);
 				
 				return obj;
 				
@@ -85,6 +88,59 @@ public class SellerDaoJDBC implements SellerDao{
 		}
 
 	}
+	
+	@Override
+	public List<Seller> findByDepartment(Department department) {
+		
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			
+			st = conn.prepareStatement(
+					"SELECT seller.*,department.Name as DepName "
+					+ "FROM seller INNER JOIN department "
+					+ "ON seller.DepartmentId = department.Id "
+					+ "WHERE DepartmentId = ? "
+					+ "ORDER BY Name");
+					
+			
+			st.setInt(1, department.getId());//a operação esta passando como parametro o id que vai ser recebido como argumento pelo metodo
+			rs = st.executeQuery();
+			
+			List<Seller> list = new ArrayList<>();
+			Map<Integer, Department> map = new HashMap<>();//Vai ser utilizado de uma forma que ele verifica se há o departamento
+			
+			while (rs.next()) {
+
+				Department dep = map.get(rs.getInt("DepartmentId"));//Vai buscar no map o id do departamento, caso não tenha vai retornar nulo
+				
+				if (dep == null) {//vai verificar se dep é nulo se for vai criar o obj
+					
+					dep = instantiateDepartment(rs);//se for nulo vai intanciar o departamento
+					map.put(rs.getInt("DepartmentId"), dep);//Vai pegar o valor do id do departamento como chave e passar (dep)como valor
+				}
+
+				Seller obj = instatiateSeller(rs, dep);
+				list.add(obj);
+			}
+
+			return list;
+
+		} catch (SQLException e) {
+
+			throw new DbException(e.getMessage());
+
+		} finally {
+
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+
+		}
+		
+		
+		
+	}
 
 	private Seller instatiateSeller(ResultSet rs, Department department) throws SQLException {
 		// TODO Auto-generated method stub
@@ -103,10 +159,10 @@ public class SellerDaoJDBC implements SellerDao{
 	private Department instantiateDepartment(ResultSet rs) throws SQLException {//Metodo de intanciação do Department
 		// TODO Auto-generated method stub
 		
-		Department department = new Department();
-		department.setId(rs.getInt("DepartmentId"));//vai passar o ID que esta no banco para a classe!
-		department.setName(rs.getString("DepName"));//vai passar o nome do departamento para a classe!
-		return department;
+		Department dep = new Department();
+		dep.setId(rs.getInt("DepartmentId"));//vai passar o ID que esta no banco para a classe!
+		dep.setName(rs.getString("DepName"));//vai passar o nome do departamento para a classe!
+		return dep;
 	}
 
 	@Override
@@ -114,5 +170,7 @@ public class SellerDaoJDBC implements SellerDao{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	
 
 }
