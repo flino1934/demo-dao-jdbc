@@ -3,6 +3,8 @@ package application;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import model.dao.DaoFactory;
 import model.dao.SellerDao;
 import model.entities.Department;
@@ -40,6 +42,17 @@ public class Program {
 		System.out.println("Inserted new Id "+newSeller.getId());
 		*/
 		
+		System.out.println("\n=== TEST 5: seller findByDepartment =====");
+		seller = sellerDao.findById(1);//Vai trocar todos do id passado
+		seller.setName("Martha Waine");//novo nome
+		seller.setEmail("martha@gmail.com");//novo email
+		sellerDao.update(seller);
+		System.out.println("Update Complete");
+		
+		System.out.println("\n=== TEST 6: seller findByDepartment =====");
+		int id = Integer.parseInt(JOptionPane.showInputDialog("Informe o id que deseja deletar"));
+		sellerDao.deleteById(id);
+		System.out.println("Delete");
 	}
 
 }

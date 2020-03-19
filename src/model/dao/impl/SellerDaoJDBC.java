@@ -60,23 +60,22 @@ public class SellerDaoJDBC implements SellerDao{
 					int id = rs.getInt(1);//Vai pegar o id 
 					obj.setId(id);//vai atribuir o id ao obj
 				}
-				
+
 				DB.closeResultSet(rs);
-				
-			}else {
+
+			} else {
 				throw new DbException("Erro inesperado");
 			}
-		}catch(SQLException e) {
-			
+		} catch (SQLException e) {
+
 			throw new DbException(e.getMessage());
-			
-		}finally {
-			
+
+		} finally {
+
 			DB.closeStatement(st);
-			
+
 		}
-		
-		
+
 	}
 
 	@Override
@@ -115,7 +114,33 @@ public class SellerDaoJDBC implements SellerDao{
 	@Override
 	public void deleteById(Integer id) {
 		// TODO Auto-generated method stub
-		
+
+		PreparedStatement st = null;
+
+		try {
+
+			st = conn.prepareStatement("DELETE FROM seller WHERE Id = ?");//Vai pegar o id e deletar todos os dados do id
+
+			st.setInt(1, id);
+
+			int rowAffected = st.executeUpdate();
+			
+			if (rowAffected == 0) {
+				
+				throw new DbException("Id não encontrado!");
+				
+			}
+
+		} catch (SQLException e) {
+
+			throw new DbException(e.getMessage());
+
+		}finally {
+			
+			DB.closeStatement(st);
+			
+		}
+
 	}
 
 	@Override
