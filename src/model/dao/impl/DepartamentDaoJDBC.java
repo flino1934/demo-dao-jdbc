@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,44 @@ public class DepartamentDaoJDBC implements DepartmentDao {
 
 	@Override
 	public void insert(Department obj) {
-		// TODO Auto-generated method stub
+		
+		PreparedStatement st = null;
+		
+		try {
+			
+			st = conn.prepareStatement(
+					"INSERT INTO department "
+							+"(Name) " 
+							+"VALUES " 
+							+"(?)", 
+							Statement.RETURN_GENERATED_KEYS);
+			
+			st.setString(1,obj.getName());
+			
+			int rowsAffected = st.executeUpdate();
+			
+			if (rowsAffected > 0) {
+				
+				ResultSet rs = st.getGeneratedKeys();//vai pegar a chave que vai ser o id
+				
+				if (rs.next()) {
+					
+					int id = rs.getInt(1);
+					obj.setId(id);
+				}else {
+					
+					throw new DbException("Erro inesperado");
+				
+				}
+				
+			}
+			
+		}catch(SQLException e) {
+			
+			throw new DbException(e.getMessage());
+			
+		}
+		
 
 	}
 
@@ -103,7 +141,7 @@ public class DepartamentDaoJDBC implements DepartmentDao {
 			while(rs.next()) {
 				
 				Department obj = instantiateDepartment(rs);
-				list.add(obj);
+				list.add(obj);//vai passar obj como argumento para lista
 				
 			}
 

@@ -10,19 +10,24 @@ public class Program2 {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		
+
 		DepartmentDao departmentDao = DaoFactory.createDepartmentDao();
-		
+
 		System.out.println("=== TEST 1: findById =======");
 		Department dep = departmentDao.findById(2);
 		System.out.println(dep);
-		
+
 		System.out.println("\n=== TEST 2: findAll =======");
 		List<Department> list = departmentDao.findAll();
 		for (Department d : list) {
 			System.out.println(d);
 		}
 		
+		/*System.out.println("\n=== TEST 2: findAll =======");
+		Department department = new Department(null,"T.i");
+		departmentDao.insert(department);
+		System.out.println("Inserted! New id: " + department.getId());*/
+
 	}
 
 }
