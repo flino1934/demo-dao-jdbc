@@ -42,40 +42,46 @@ public class DepartamentDaoJDBC implements DepartmentDao {
 	@Override
 	public Department findById(Integer id) {
 		// TODO Auto-generated method stub
-		
+
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		
+
 		try {
-			
-			st = conn.prepareStatement(
-					"SELECT * FROM department WHERE Id = ?");
+
+			st = conn.prepareStatement("SELECT * FROM department WHERE Id = ?");
 
 			st.setInt(1, id);
 			rs = st.executeQuery();
-			
+
 			if (rs.next()) {
+
+				Department obj = instantiateDepartment(rs);
 				
-				Department obj = new Department();
-				obj.setId(rs.getInt("Id"));
-				obj.setName(rs.getString("Name"));
 				return obj;
 			}
-			
+
 			return null;
-			
-		}catch(SQLException e) {
-			
+
+		} catch (SQLException e) {
+
 			throw new DbException(e.getMessage());
-			
-		}finally {
-			
+
+		} finally {
+
 			DB.closeResultSet(rs);
 			DB.closeStatement(st);
-			
+
 		}
-		
-		
+
+	}
+
+	private Department instantiateDepartment(ResultSet rs) throws SQLException {// Metodo de intanciação do Department
+		// TODO Auto-generated method stub
+
+		Department dep = new Department();
+		dep.setId(rs.getInt("ID"));// vai passar o ID que esta no banco para a classe!
+		dep.setName(rs.getString("Name"));// vai passar o nome do departamento para a classe!
+		return dep;
 	}
 
 	@Override
