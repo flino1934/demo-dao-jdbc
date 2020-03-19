@@ -2,6 +2,8 @@ package application;
 
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import model.dao.DaoFactory;
 import model.dao.DepartmentDao;
 import model.entities.Department;
@@ -33,6 +35,12 @@ public class Program2 {
 		department.setName("Food");
 		departmentDao.update(department);
 		System.out.println("Update Complete");*/
+		
+		System.out.println("\n=== TEST 5: delete =======");
+		System.out.print("Enter id for delete test: ");
+		int id = Integer.parseInt(JOptionPane.showInputDialog("Entre com o id que deseja excluir!"));
+		departmentDao.deleteById(id);
+		System.out.println("Delete completed");
 		
 		
 		
