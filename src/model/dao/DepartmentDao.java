@@ -3,6 +3,7 @@ package model.dao;
 import java.util.List;
 
 import model.entities.Department;
+import model.entities.Seller;
 
 public interface DepartmentDao {
 
@@ -15,4 +16,5 @@ public interface DepartmentDao {
 	Department findById(Integer id);// vai consultar se tem o id solicitado
 
 	List<Department> findAll();// vai retornar todos os departamentos
+
 }
